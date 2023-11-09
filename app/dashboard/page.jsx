@@ -3,8 +3,6 @@
 import BaseLayout from "@/components/BaseLayout";
 import Feed from "@/components/Feed";
 import Header from "@/components/Header";
-import HeartCard from "@/components/HeartCard";
-import UserInfo from "@/components/UserInfo";
 import { GlobalContext } from "@/context";
 import { useSession } from "next-auth/react";
 import { useContext, useEffect, useState } from "react";
