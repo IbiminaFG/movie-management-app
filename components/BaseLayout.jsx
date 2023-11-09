@@ -1,6 +1,6 @@
 "use client";
 
-import Sidebar from "./Sidebar";
+import Sidebar from "./SideBar";
 
 const BaseLayout = ({ children }) => {
   return (
