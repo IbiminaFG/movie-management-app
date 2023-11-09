@@ -13,3 +13,13 @@ export async function POST(req) {
     console.log(error);
   }
 }
+
+export async function GET(req) {
+  try {
+    await connectMongoDB();
+    const users = await User.find().populate("_id");
+    return NextResponse.json({ users });
+  } catch (error) {
+    console.log(error);
+  }
+}

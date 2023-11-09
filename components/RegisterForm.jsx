@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function RegisterForm() {
   const [name, setName] = useState("");
@@ -21,6 +23,7 @@ export default function RegisterForm() {
     }
 
     try {
+      toast.loading("Loading...");
       const resUserExists = await fetch("api/userExists", {
         method: "POST",
         headers: {
@@ -32,6 +35,8 @@ export default function RegisterForm() {
       const { user } = await resUserExists.json();
 
       if (user) {
+        toast.dismiss();
+        toast.error("Email exists");
         setError("User already exists.");
         return;
       }
@@ -49,10 +54,14 @@ export default function RegisterForm() {
       });
 
       if (res.ok) {
+        toast.dismiss();
+        toast.success("Registered!");
         const form = e.target;
         form.reset();
         router.push("/");
       } else {
+        toast.dismiss();
+        toast.error("Failed!");
         console.log("User registration failed.");
       }
     } catch (error) {
@@ -62,7 +71,7 @@ export default function RegisterForm() {
 
   return (
     <div className="grid place-items-center h-screen">
-      <div className="shadow-lg p-5 rounded-lg border-t-4 border-green-400">
+      <div className="shadow-lg p-5 border-t-4 border-green-400 bg-neutral-300 animate-pulse py-4 rounded-lg">
         <h1 className="text-xl font-bold my-4">Register</h1>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">

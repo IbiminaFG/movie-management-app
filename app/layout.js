@@ -1,6 +1,9 @@
+import { SidebarProvider } from "@/context/SidebarContext";
 import { AuthProvider } from "./Providers";
 import "./globals.css";
 import { Inter } from "next/font/google";
+import GlobalState from "@/context";
+import { ToastContainer } from "react-toastify";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,7 +16,14 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <GlobalState>
+            <SidebarProvider>
+              <ToastContainer />
+              {children}
+            </SidebarProvider>
+          </GlobalState>
+        </AuthProvider>
       </body>
     </html>
   );
