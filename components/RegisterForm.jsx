@@ -81,16 +81,19 @@ export default function RegisterForm() {
             onChange={(e) => setName(e.target.value)}
             type="text"
             placeholder="Full Name"
+            className="max-[450px]:w-full"
           />
           <input
             onChange={(e) => setEmail(e.target.value)}
             type="text"
             placeholder="Email"
+            className="max-[450px]:w-full"
           />
           <input
             onChange={(e) => setPassword(e.target.value)}
             type="password"
             placeholder="Password"
+            className="max-[450px]:w-full"
           />
           <button className="bg-green-600 text-white font-bold cursor-pointer px-6 py-2">
             Register
