@@ -101,7 +101,8 @@ const Editpage = () => {
       );
 
       if (response.ok) {
-        this.success("Successful!");
+        toast.dismiss();
+        toast.success("Successful!");
         router.push("/dashboard");
         console.log("okay res", response);
       }
