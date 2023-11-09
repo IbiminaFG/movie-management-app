@@ -1,10 +1,11 @@
+![Screenshot (429)](https://github.com/IbiminaFG/movie-management-app/assets/82587474/faf24426-fe33-4880-b7b4-b92560a95951)
+![Screenshot (428)](https://github.com/IbiminaFG/movie-management-app/assets/82587474/22c8ec2e-c1f0-45c3-9feb-a14db135d3b5)
+![Screenshot (427)](https://github.com/IbiminaFG/movie-management-app/assets/82587474/647e9569-09aa-47ee-9dd6-34efc2e22d28)
 # Movie Management App
 
 Welcome to the project's README. This document provides an overview and documentation for the project.
 
-https://movie-management-app-two.vercel.app/profile
-
-[Link Text](https://movie-management-app-two.vercel.app/profile)
+[Live link](https://movie-management-app-two.vercel.app/profile)
 
 ## Table of Contents
 
