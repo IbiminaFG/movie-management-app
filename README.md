@@ -1,6 +1,6 @@
 # Movie Management App
 
-Welcome to the project's README. This document provides an overview and documentation for the "Project Name" project.
+Welcome to the project's README. This document provides an overview and documentation for the project.
 
 ## Table of Contents
 
