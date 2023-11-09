@@ -2,6 +2,10 @@
 
 Welcome to the project's README. This document provides an overview and documentation for the project.
 
+https://movie-management-app-two.vercel.app/profile
+
+[Link Text](https://movie-management-app-two.vercel.app/profile)
+
 ## Table of Contents
 
 - [Introduction](#introduction)
