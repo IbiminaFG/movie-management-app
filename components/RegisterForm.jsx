@@ -10,7 +10,6 @@ export default function RegisterForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
 
   const router = useRouter();
 
@@ -23,7 +22,7 @@ export default function RegisterForm() {
 
     try {
       toast.loading("Loading...");
-      const resUserExists = await fetch("api/userExists", {
+      const resUserExists = await fetch("api/trial/profile", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -31,15 +30,15 @@ export default function RegisterForm() {
         body: JSON.stringify({ email }),
       });
 
-      const { user } = await resUserExists.json();
+      const { account } = await resUserExists.json();
 
-      if (user) {
+      if (account) {
         toast.dismiss();
         toast.error("Email exists");
         return;
       }
 
-      const res = await fetch("api/register", {
+      const res = await fetch("api/trial/account", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -48,6 +47,11 @@ export default function RegisterForm() {
           name,
           email,
           password,
+          image: "",
+          address: "",
+          gender: "",
+          phone: "",
+          origin: "",
         }),
       });
 
@@ -91,12 +95,6 @@ export default function RegisterForm() {
           <button className="bg-green-600 text-white font-bold cursor-pointer px-6 py-2">
             Register
           </button>
-
-          {error && (
-            <div className="bg-red-500 text-white w-fit text-sm py-1 px-3 rounded-md mt-2">
-              {error}
-            </div>
-          )}
 
           <Link className="text-sm mt-3 text-right" href={"/"}>
             Already have an account? <span className="underline">Login</span>

@@ -3,7 +3,7 @@ import Image from "next/image";
 import React, { useContext } from "react";
 
 const Header = ({ showSearch, handleSearch }) => {
-  const { profileDetails, userDetails } = useContext(GlobalContext);
+  const { userDetails } = useContext(GlobalContext);
   return (
     <header className="flex flex-col px-2  py-8 justify-around items-center">
       <div className="flex items-center justify-around w-full">
@@ -35,8 +35,8 @@ const Header = ({ showSearch, handleSearch }) => {
           <div className="flex gap-2 w-[50px] h-[50px] items-center">
             <Image
               src={
-                profileDetails?.image
-                  ? `${profileDetails?.image}`
+                userDetails?.image
+                  ? `${userDetails?.image}`
                   : "/assets/images/avatar.jpg"
               }
               width={50}

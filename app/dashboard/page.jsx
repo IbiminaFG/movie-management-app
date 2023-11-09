@@ -14,50 +14,17 @@ export default function Dashboard() {
   const [isVideoLoading, setIsVideoLoading] = useState(false);
   const [searchState, setSearchState] = useState(false);
 
-  const {
-    profileDetails,
-    searchResults,
-    setSearchResults,
-    setProfileDetails,
-    setUserDetails,
-    userDetails,
-  } = useContext(GlobalContext);
+  const { searchResults, setSearchResults, setUserDetails, userDetails } =
+    useContext(GlobalContext);
 
   const session = useSession();
   const sessionUserEmail = session?.data?.user?.email;
-
-  //Gets the Users full detail
-  const getProfileDetails = async (id) => {
-    try {
-      const res = await fetch("/api/profile", {
-        method: "GET",
-        headers: {
-          "Content-type": "application/json",
-        },
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to fetch user details");
-      }
-
-      const data = await res.json();
-
-      data.map((item) => {
-        const reqId = item?.creator?._id;
-        if (reqId === id) {
-          setProfileDetails(item);
-        }
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   //Get the user that corresponds with the session
   useEffect(() => {
     const getUserDetails = async () => {
       try {
-        const res = await fetch("/api/userExists", {
+        const res = await fetch("/api/trial/profile", {
           method: "GET",
           headers: {
             "Content-type": "application/json",
@@ -69,11 +36,11 @@ export default function Dashboard() {
         }
 
         const data = await res.json();
-        const dataArr = data?.users;
+
+        const dataArr = data?.accounts;
         dataArr.map((item, index) => {
           if (item.email === sessionUserEmail) {
             setUserDetails(item);
-            getProfileDetails(item._id);
           }
         });
       } catch (error) {
@@ -106,12 +73,11 @@ export default function Dashboard() {
       setIsVideoLoading(true);
       const response = await fetch(url, options);
       const result = await response.json();
-      console.log("result", result);
 
       if (result.Response) {
         setAreVideosLoading(false);
+        setSearchResults(result.Search);
         setTimeout(() => {
-          setSearchResults(result.Search);
           setIsVideoLoading(false);
         }, 4000);
       } else {
@@ -126,7 +92,11 @@ export default function Dashboard() {
   return (
     <BaseLayout>
       <div className="overflow-y-scroll h-screen">
-        <Header showSearch={true} handleSearch={handleSearch} />
+        <Header
+          showSearch={true}
+          handleSearch={handleSearch}
+          userDetails={userDetails}
+        />
         <div className="px-3 sm:px-8">
           <div className="w-full px-1 sm:px-3 bg-neutral-300 animate-pulse py-3 rounded-lg">
             <p className="text-md sm:text-2xl">
@@ -141,7 +111,6 @@ export default function Dashboard() {
           isVideoLoading={isVideoLoading}
         />
       </div>
-      {/* <UserInfo /> */}
     </BaseLayout>
   );
 }

@@ -9,8 +9,14 @@ import { useSearchParams } from "next/navigation";
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 import CircleLoader from "@/components/circle-loader";
 import { GlobalContext } from "@/context";
+import { redirect } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const MovieDetailPage = () => {
+  const session = useSession();
+
+  if (!session.data) redirect("/");
+
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState({});
 
@@ -35,10 +41,10 @@ const MovieDetailPage = () => {
         if (response.ok) {
           const result = await response.json();
           setData(result);
-          setIsLoading(false);
+          setTimeout(setIsLoading(false), 4000);
         } else {
-          throw new Error("Request failed");
           setIsLoading(false);
+          throw new Error("Request failed");
         }
       } catch (error) {
         console.error(error);
@@ -70,40 +76,28 @@ const MovieDetailPage = () => {
     <BaseLayout>
       <div className="px-3 sm:px-8 pb-10 w-full h-screen overflow-y-scroll overflow-x-hidden bg-[#21201E]">
         <Header showSearch={false} />
+
         <section className="mt-8">
           <div className="flex sm:px-10 gap-4 items-center justify-around flex-wrap md:flex-nowrap">
-            {!data && isLoading ? (
-              <div className="w-96 h-full">
-                <LoadingSkeleton />
-              </div>
+            {isLoading ? (
+              <LoadingSkeleton />
             ) : (
-              data &&
-              !isLoading && (
-                <div className="">
-                  <Image
-                    src={data?.Poster}
-                    width={400}
-                    height={200}
-                    alt={data?.Title}
-                    className="rounded-20"
-                  />
-                </div>
-              )
+              <div className="">
+                <Image
+                  src={data?.Poster}
+                  width={400}
+                  height={200}
+                  alt={data?.Title}
+                  className="rounded-20"
+                />
+              </div>
             )}
+
             <div className="w-full flex flex-col gap-5">
               <div className="flex justify-between items-center">
-                {!data && isLoading ? (
-                  <div className="w-96 h-full">
-                    <LoadingSkeleton />
-                  </div>
-                ) : (
-                  data &&
-                  !isLoading && (
-                    <p className="text-sm font-medium sm:font-semi-bold leading-8 sm:text-[32px] text-white">
-                      {data?.Title}
-                    </p>
-                  )
-                )}
+                <p className="text-sm font-medium sm:font-semi-bold leading-8 sm:text-[32px] text-white">
+                  {data?.Title}
+                </p>
 
                 <p className="text-[8px] text-white sm:text-lg sm:font-medium flex gap-2 items-center">
                   <Image
@@ -138,6 +132,7 @@ const MovieDetailPage = () => {
             </div>
           </div>
         </section>
+
         <section className="mt-4">
           <div className="text-xs text-white sm:text-sm flex flex-wrap sm:flex-nowrap gap-1 mb-1">
             <p className="w-16">Director: </p>

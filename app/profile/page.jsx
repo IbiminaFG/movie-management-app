@@ -8,21 +8,23 @@ import { useRouter } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { redirect } from "next/navigation";
 
 const ProfilePage = () => {
-  const [userDetails, setUserDetails] = useState({});
-  const [profileDetails, setProfileDetails] = useState({});
+  const { userDetails, setUserDetails } = useContext(GlobalContext);
 
   const router = useRouter();
 
   const session = useSession();
   const sessionUserEmail = session?.data?.user?.email;
 
+  if (!session.data) redirect("/");
+
   //Basic registration details
   useEffect(() => {
     const getUserDetails = async () => {
       try {
-        const res = await fetch("/api/userExists", {
+        const res = await fetch("/api/trial/profile", {
           method: "GET",
           headers: {
             "Content-type": "application/json",
@@ -34,7 +36,7 @@ const ProfilePage = () => {
         }
 
         const data = await res.json();
-        const dataArr = data?.users;
+        const dataArr = data?.accounts;
         dataArr.map((item) => {
           if (item.email === sessionUserEmail) {
             console.log("userdetails", item);
@@ -48,39 +50,7 @@ const ProfilePage = () => {
     getUserDetails();
   }, []);
 
-  //Profile details
-  useEffect(() => {
-    if (!userDetails) return;
-    const getProfileDetails = async () => {
-      try {
-        const res = await fetch("/api/profile", {
-          method: "GET",
-          headers: {
-            "Content-type": "application/json",
-          },
-        });
-
-        if (!res.ok) {
-          throw new Error("Failed to fetch user details");
-        }
-
-        const data = await res.json();
-
-        data.map((item) => {
-          const reqId = item?.creator?._id;
-          if (reqId === userDetails?._id) {
-            console.log("profile", item);
-            setProfileDetails(item);
-          }
-        });
-        console.log("profileDetails", profileDetails);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getProfileDetails();
-  }, [userDetails]);
-
+  // Delete functionality
   const handleDelete = async () => {
     const confirmDelete = confirm(
       "Are you sure you want to delete your account!"
@@ -91,15 +61,12 @@ const ProfilePage = () => {
     toast.loading("Loading...");
 
     try {
-      const res = await fetch(
-        `/api/deleteAccount/${profileDetails?.creator?._id}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-type": "application/json",
-          },
-        }
-      );
+      const res = await fetch(`/api/trial/profile/${userDetails?._id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-type": "application/json",
+        },
+      });
 
       if (!res.ok) {
         toast.dismiss;
@@ -108,9 +75,8 @@ const ProfilePage = () => {
       }
 
       toast.dismiss();
-
       signOut();
-      router.push("");
+      router.push("/dashboard");
     } catch (error) {
       toast.error("Error");
       console.log(error);
@@ -126,7 +92,7 @@ const ProfilePage = () => {
           <div className="w-full px-3 sm:px-8 bg-neutral-300 animate-pulse py-4 rounded-lg">
             <div className="flex gap-4 items-center">
               {/* Image options */}
-              {!profileDetails && userDetails && (
+              {!userDetails && (
                 <Image
                   src="/assets/images/avatar.jpg"
                   width={70}
@@ -135,11 +101,11 @@ const ProfilePage = () => {
                   className="rounded-full"
                 />
               )}
-              {profileDetails && (
+              {userDetails && (
                 <Image
                   src={
-                    profileDetails?.image
-                      ? profileDetails.image
+                    userDetails?.image
+                      ? userDetails.image
                       : "/assets/images/avatar.jpg"
                   }
                   width={70}
@@ -151,7 +117,7 @@ const ProfilePage = () => {
               {/* Image options stops here */}
               <div className="flex flex-col gap-1">
                 <p className="text-sm w-full font-semibold">
-                  {userDetails.name}
+                  {userDetails?.name}
                 </p>
                 <p className="text-xs font-medium">{userDetails?.email}</p>
               </div>
@@ -163,6 +129,9 @@ const ProfilePage = () => {
                 Profile Information
               </h3>
               <hr />
+
+              {/* Profile Information starts here */}
+
               <div className="mt-4 flex flex-col gap-2">
                 <div className="flex flex-col sm:flex-row sm:items-center">
                   <p className="w-28 text-base font-medium">Name:</p>
@@ -174,21 +143,23 @@ const ProfilePage = () => {
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-center">
                   <p className="w-28 text-base font-medium">Address:</p>
-                  <p className="text-sm">{profileDetails?.address}</p>
+                  <p className="text-sm">{userDetails?.address}</p>
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-center">
                   <p className="w-28 text-base font-medium">Gender:</p>
-                  <p className="text-sm">{profileDetails?.gender}</p>
+                  <p className="text-sm">{userDetails?.gender}</p>
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-center">
                   <p className="w-28 text-base font-medium">Phone:</p>
-                  <p className="text-sm">{profileDetails?.phone}</p>
+                  <p className="text-sm">{userDetails?.phone}</p>
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-center">
                   <p className="w-28 text-base font-medium">Origin:</p>
-                  <p className="text-sm">{profileDetails?.origin}</p>
+                  <p className="text-sm">{userDetails?.origin}</p>
                 </div>
               </div>
+
+              {/* Profile Information ends here */}
             </div>
           </div>
           <div>

@@ -77,7 +77,8 @@ const Sidebar = () => {
               <span className="sidebar__name">Settings</span>
             </Link>
           </div>
-          <div
+          <Link
+            href="/"
             className="flex items-center gap-1 cursor-pointer"
             onClick={() => signOut()}
           >
@@ -88,7 +89,7 @@ const Sidebar = () => {
               alt="logo"
             />
             <span className="sidebar__name">Log Out</span>
-          </div>
+          </Link>
         </div>
       </aside>
     </div>

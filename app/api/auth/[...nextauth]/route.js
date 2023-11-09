@@ -1,5 +1,6 @@
 import { connectMongoDB } from "@/lib/mongodb";
 import User from "@/models/user";
+import Account from "@/models/account";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
@@ -12,7 +13,9 @@ export const authOptions = {
 
       async session({ session }) {
         // store the user id from MongoDB to session
-        const sessionUser = await User.findOne({ email: session.user.email });
+        const sessionUser = await Account.findOne({
+          email: session.user.email,
+        });
         session.user.id = sessionUser._id.toString();
 
         return session;
@@ -23,19 +26,22 @@ export const authOptions = {
 
         try {
           await connectMongoDB();
-          const user = await User.findOne({ email });
+          const account = await Account.findOne({ email });
 
-          if (!user) {
+          if (!account) {
             return null;
           }
 
-          const passwordsMatch = await bcrypt.compare(password, user.password);
+          const passwordsMatch = await bcrypt.compare(
+            password,
+            account.password
+          );
 
           if (!passwordsMatch) {
             return null;
           }
 
-          return user;
+          return account;
         } catch (error) {
           console.log("Error: ", error);
         }

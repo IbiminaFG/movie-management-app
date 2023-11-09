@@ -6,7 +6,8 @@ import Image from "next/image";
 import { GlobalContext } from "@/context";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Function to covert to binary64
 const convertToBase64 = (file) => {
@@ -23,7 +24,6 @@ const convertToBase64 = (file) => {
 };
 
 const Editpage = () => {
-  const [profileDetails, setProfileDetails] = useState({});
   const [image, setImage] = useState("");
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
@@ -36,13 +36,11 @@ const Editpage = () => {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
 
-  console.log(profileDetails);
-
   //Get profile details
   useEffect(() => {
     const getProfileDetails = async () => {
       try {
-        const res = await fetch("/api/profile", {
+        const res = await fetch(`/api/trial/profile/${id}`, {
           method: "GET",
           headers: {
             "Content-type": "application/json",
@@ -54,21 +52,13 @@ const Editpage = () => {
         }
 
         const data = await res.json();
-
-        data.map((item) => {
-          const reqId = item?.creator?._id;
-          if (reqId === id) {
-            setProfileDetails(item);
-            // Set the initial values of the input fields after fetching data
-            setImage(item.image || "");
-            setName(item.creator.name || "");
-            setAddress(item.address || "");
-            setGender(item.gender || "");
-            setPhone(item.phone || "");
-            setOrigin(item.origin || "");
-          }
-        });
-        console.log("profileDetails", profileDetails);
+        // Set the initial values of the input fields after fetching data
+        setImage(data[0].image || "");
+        setName(data[0].name || "");
+        setAddress(data[0].address || "");
+        setGender(data[0].gender || "");
+        setPhone(data[0].phone || "");
+        setOrigin(data[0].origin || "");
       } catch (error) {
         console.log(error);
       }
@@ -76,41 +66,33 @@ const Editpage = () => {
     getProfileDetails();
   }, []);
 
-  console.log("name", name);
-  console.log("nameP", profileDetails?.creator?.name);
-
+  //Handle submit functionality
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    toast.loading("Loading...");
     //Put request
     try {
-      const response = await fetch(
-        `/api/profile/${profileDetails?._id}?id=${profileDetails?.creator?._id}`,
-        {
-          method: "PUT",
-          body: JSON.stringify({
-            name,
-            image,
-            address,
-            gender,
-            phone,
-            origin,
-          }),
-        }
-      );
+      toast.loading("Updating...");
+      const response = await fetch(`/api/trial/profile/${id}`, {
+        method: "PUT",
+        body: JSON.stringify({
+          name,
+          image,
+          address,
+          gender,
+          phone,
+          origin,
+        }),
+      });
 
       if (response.ok) {
         toast.dismiss();
         toast.success("Successful!");
         router.push("/dashboard");
-        console.log("okay res", response);
       }
     } catch (error) {
       toast.dismiss();
       console.log(error);
-    } finally {
-      // setIsSubmitting(false);
     }
 
     //Post request
@@ -169,7 +151,7 @@ const Editpage = () => {
               className="w-full h-full rounded-full"
             />
           )}
-          {!imageFile && !profileDetails?.image && (
+          {!imageFile && !image && (
             <Image
               src="/assets/images/avatar.jpg"
               width={50}
@@ -178,9 +160,9 @@ const Editpage = () => {
               className="w-full h-full rounded-full"
             />
           )}
-          {profileDetails?.image && !imageFile && (
+          {image && !imageFile && (
             <Image
-              src={profileDetails?.image}
+              src={image}
               width={50}
               height={50}
               alt="avatar"
@@ -242,11 +224,14 @@ const Editpage = () => {
             onChange={(e) => setGender(e.target.value)}
             name="gender"
             id="gender"
-            value={gender}
-            className="outline-none text-xs text-gray-500 my-2"
+            value={gender.toLowerCase()}
+            className="outline-none text-xs text-gray-500 my-2 bg-transparent"
           >
-            <option value="Male">male</option>
-            <option value="Female">female</option>
+            <option value="" disabled selected>
+              Select your gender
+            </option>
+            <option value="male">male</option>
+            <option value="memale">female</option>
           </select>
         </div>
         <div className="flex flex-col w-full border-b">
