@@ -17,8 +17,6 @@ export default function LoginForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setError("");
-
     try {
       toast.loading("Loading...");
       const res = await signIn("credentials", {
@@ -28,7 +26,6 @@ export default function LoginForm() {
       });
 
       if (res.error) {
-        setError("Invalid Credentials");
         toast.dismiss();
         toast.error("Invalid Credentials");
         return;

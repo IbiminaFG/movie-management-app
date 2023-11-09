@@ -18,7 +18,6 @@ export default function RegisterForm() {
     e.preventDefault();
 
     if (!name || !email || !password) {
-      setError("All fields are necessary.");
       return;
     }
 
@@ -37,7 +36,6 @@ export default function RegisterForm() {
       if (user) {
         toast.dismiss();
         toast.error("Email exists");
-        setError("User already exists.");
         return;
       }
 
