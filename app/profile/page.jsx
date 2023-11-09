@@ -115,6 +115,7 @@ const ProfilePage = () => {
       toast.error("Error");
       console.log(error);
     }
+    toast.dismiss();
   };
 
   return (
