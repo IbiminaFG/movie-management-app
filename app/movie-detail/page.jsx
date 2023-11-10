@@ -162,11 +162,10 @@ const MovieDetailPage = () => {
             <div className="text-white flex gap-1 flex-wrap sm:flex-nowrap text-xs sm:text-sm">
               <span>
                 {" "}
-                {!data?.Actor || data?.Actor === "N/A"
+                {!data?.Actors || data?.Actors === "N/A"
                   ? "Not Available Yet!"
-                  : data?.Actor}
+                  : data?.Actors}
               </span>
-              Actor
             </div>
           </div>
 
@@ -175,9 +174,9 @@ const MovieDetailPage = () => {
             <div className="text-white flex gap-1 flex-wrap sm:flex-nowrap text-xs sm:text-sm">
               <span>
                 {" "}
-                {!data?.Realease || data?.Realease === "N/A"
+                {!data?.Realeased || data?.Realeased === "N/A"
                   ? "Not Available Yet!"
-                  : data?.Realease}
+                  : data?.Realeased}
               </span>
             </div>
           </div>
@@ -252,12 +251,11 @@ const MovieDetailPage = () => {
             <div className="text-white flex gap-1 flex-wrap sm:flex-nowrap text-xs sm:text-sm">
               <span>
                 {" "}
-                {!data?.Website === "N/A"
+                {!data?.Website || data?.Website === "N/A"
                   ? "Not Available Yet!"
                   : data?.Website}
               </span>
             </div>
-            Website
           </div>
           <div className="text-white text-xs sm:text-sm flex flex-wrap sm:flex-nowrap gap-1 mb-1">
             <p className="w-14 sm:w-20">Response: </p>
